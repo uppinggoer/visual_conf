@@ -1,0 +1,100 @@
+{
+    "a==1": {
+        "__node_id": 1,
+        "b==1": {
+            "__node_id": 1,
+            "c==1": {
+                "__node_id": 1,
+                "__value": "111"
+            },
+            "c==2": {
+                "__node_id": 2,
+                "__value": "112"
+            },
+            "defalut": {
+                "__node_id": 3,
+                "__value": "11d"
+            }
+        },
+        "b==2": {
+            "__node_id": 2,
+            "c==1": {
+                "__node_id": 1,
+                "__value": "121"
+            },
+            "c==2": {
+                "__node_id": 2,
+                "__value": "122"
+            },
+            "defalut": {
+                "__node_id": 3,
+                "__value": "12d"
+            }
+        }
+    },
+    "a==2": {
+        "__node_id": 2,
+        "b==1": {
+            "__node_id": 1,
+            "c==1": {
+                "__node_id": 1,
+                "__value": "211"
+            },
+            "c==2": {
+                "__node_id": 2,
+                "__value": "212"
+            },
+            "defalut": {
+                "__node_id": 3,
+                "__value": "21d"
+            }
+        },
+        "b==2": {
+            "__node_id": 2,
+            "c==1": {
+                "__node_id": 1,
+                "__value": "221"
+            },
+            "c==2": {
+                "__node_id": 2,
+                "__value": "222"
+            },
+            "defalut": {
+                "__node_id": 3,
+                "__value": "22d"
+            }
+        },
+        "defalut": {
+            "__node_id": 3,
+            "defalut": {
+                "__node_id": 1,
+                "__value": "2dd"
+            }
+        }
+    },
+    "default": {
+        "__node_id": 3,
+        "b==1": {
+            "__node_id": 1,
+            "c==1": {
+                "__node_id": 1,
+                "__value": "d11"
+            },
+            "defalut": {
+                "__node_id": 2,
+                "__value": "d1d"
+            }
+        },
+        "defalut": {
+            "__node_id": 2,
+            "c==1": {
+                "__node_id": 1,
+                "__value": "dd1"
+            },
+            "defalut": {
+                "__node_id": 2,
+                "__value": "ddd"
+            }
+        }
+    }
+}
