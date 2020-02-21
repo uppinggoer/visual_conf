@@ -193,70 +193,61 @@ class Test(unittest.TestCase):
         self.assertRaises(AssertionError, condition._make_conditions, node_id, conds)
 
     
-    def test__make_append_tree(self):
+    def test_make_append_node(self):
         old_value = "m1_"
         new_value = "m1a1"
 
         conditions = ["N", ("m=1", "a=1")]
         expect_res = {
-            "default": {"__value": "m1_"},
             "m=1": {
                 "a=1": {
                     "__value": "m1a1"
                 },
-                "default": {"__value": "m1_"}
             }
         }
-        res = condition._make_append_tree(old_value, [conditions], new_value)
+        res = condition.make_append_node(old_value, [conditions], new_value)
         self.assertEqual(res, expect_res)
 
         conditions = ["N", ("m=1", "a=1", "default")]
         expect_res = {
-            "default": {"__value": "m1_"},
             "m=1": {
                 "a=1": {
-                    "__value": "m1a1"
+                    '__value': 'm1a1'
                 },
-                "default": {"__value": "m1_"}
             }
         }
-        res = condition._make_append_tree(old_value, [conditions], new_value)
+        res = condition.make_append_node(old_value, [conditions], new_value)
         self.assertEqual(res, expect_res)
 
         conditions = ["N", ("m=1", "a=1", "default", "default")]
         expect_res = {
-            "default": {"__value": "m1_"},
             "m=1": {
                 "a=1": {
-                    "__value": "m1a1"
+                    '__value': 'm1a1'
                 },
-                "default": {"__value": "m1_"}
             }
         }
-        res = condition._make_append_tree(old_value, [conditions], new_value)
+        res = condition.make_append_node(old_value, [conditions], new_value)
         self.assertEqual(res, expect_res)
 
-    def test__make_append_tree2(self):
+    def test_make_append_node2(self):
         old_value = "m1_"
         conditions = ["N", ("m=1", "a=1", "b=1")]
         new_value = "m1a1b1"
 
         expect_res = {
-            "default": {"__value": "m1_"},
             "m=1": {
                 "a=1": {
-                "default": {"__value": "m1_"},
-                "b=1": {
-                    "__value": "m1a1b1"
-                }
+                    "b=1": {
+                        "__value": "m1a1b1"
+                    }
                 },
-                "default": {"__value": "m1_"}
             }
         }
-        res = condition._make_append_tree(old_value, [conditions], new_value)
+        res = condition.make_append_node(old_value, [conditions], new_value)
         self.assertEqual(res, expect_res)
 
-    def test__make_append_tree3(self):
+    def test_make_append_node3(self):
         old_value = "m1_"
         conditions = [
             ["N", ("m=1", "a=1", "b=1")],
@@ -266,38 +257,26 @@ class Test(unittest.TestCase):
         new_value = "m1a1b1"
 
         expect_res = {
-            "default": {
-                "__value": "m1_"
-            },
             "m=1": {
                 "a=1": {
-                "default": {
-                    "__value": "m1_"
-                },
-                "b=1": {
-                    "__value": "m1a1b1"
-                }
+                    "b=1": {
+                        "__value": "m1a1b1"
+                    }
                 },
                 "a=2": {
-                "default": {
-                    "__value": "m1_"
-                },
-                "b=3": {
-                    "__value": "m1a1b1"
-                }
-                },
-                "default": {
-                "__value": "m1_"
+                    "b=3": {
+                        "__value": "m1a1b1"
+                    }
                 },
                 "b=1": {
-                "__value": "m1a1b1"
+                    "__value": "m1a1b1"
                 }
             }
         }
-        res = condition._make_append_tree(old_value, conditions, new_value)
+        res = condition.make_append_node(old_value, conditions, new_value)
         self.assertEqual(res, expect_res)
 
-    def test__make_append_tree4(self):
+    def test_make_append_node4(self):
         old_value = "m1_"
         conditions = [
             ["N", ("m=1", "a=1", "b=1")],
@@ -307,35 +286,23 @@ class Test(unittest.TestCase):
         new_value = "m1a1b1"
 
         expect_res = {
-            "default": {
-                "__value": "m1_"
-            },
             "m=1": {
                 "a=1": {
-                "default": {
-                    "__value": "m1_"
+                    "b=1": {
+                        "__value": "m1a1b1"
+                    }
+                },
+                "a=2": {
+                    "b=3": {
+                        "__value": "m1_"
+                    }
                 },
                 "b=1": {
                     "__value": "m1a1b1"
                 }
-                },
-                "a=2": {
-                "default": {
-                    "__value": "m1_"
-                },
-                "b=3": {
-                    "__value": "m1_"
-                }
-                },
-                "default": {
-                "__value": "m1_"
-                },
-                "b=1": {
-                "__value": "m1a1b1"
-                }
             }
         }
-        res = condition._make_append_tree(old_value, conditions, new_value)
+        res = condition.make_append_node(old_value, conditions, new_value)
         self.assertEqual(res, expect_res)
     
     def test_make_append_tree(self):

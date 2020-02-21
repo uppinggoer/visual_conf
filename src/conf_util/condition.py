@@ -100,48 +100,23 @@ def _make_conditions(node_id, condition_string):
 
     return [(c[0], common.split_condition(c[1])) for c in conditions]
         
-    # # assign
-    # conditions = set()
-    # for sub in sub_conditions:
-    #     new_condition = copy.deepcopy(pre_condition)
-    #     new_condition.update(common.remove_default_condition(common.split_condition(sub)))
-
-    #     assert len(new_condition) == len({common.ConditionSymble.split_assignment_condition(c)[0] for c in new_condition}), common.condition_conflict
-
-    #     new_condition = common.sort_condition(list(new_condition), [])
-    #     conditions.add((NEW_condition, common.join_condition(new_condition)))
-
-def _make_append_tree(old_value, conditions, new_value):
-    # 详细 case 见 test/conf_util/test_condition.py
-    def fill_default_value(dict_):
-        if dict_.get(common.leaf_value):
-            return
-
-        for v in dict_.values():
-            fill_default_value(v)
-
-        if not dict_.get(common.default_node):
-            dict_[common.default_node] = {common.leaf_value: old_value}
-
+def make_append_node(old_value, conditions, new_value):
     json_value = {} 
     for con in conditions:
         sub_dict_ = json_value
         for sub_c in con[1]:
             sub_dict_ = common.safe_get_dict_value(sub_dict_, sub_c, {})
         sub_dict_[common.leaf_value] = new_value if con[0] == NEW_condition else old_value
-
-    fill_default_value(json_value)
     common.fix_default_value(json_value)
     return json_value
 
 def make_append_tree(node_id, condition_string, old_value, new_value):
+    # 详细 case 见 test/conf_util/test_condition.py
     conditions = _make_conditions(node_id, condition_string)
-    return _make_append_tree(old_value, conditions, new_value)
-
-
-def insert_node():
-    # 冲突丢弃
-    pass
+    nodes = make_append_node(old_value, conditions, new_value)
+    common.fill_default_value(nodes, old_value)
+    common.fix_default_value(nodes)
+    return nodes
 
 if __name__ == '__main__':
     old_value = "m1"

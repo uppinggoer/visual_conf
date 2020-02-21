@@ -17,7 +17,9 @@ import copy
 leaf_value = "__value"
 default_node = "default"
 key_conf_path = os.path.abspath(os.path.dirname(__file__)) + "/../../keys/"
+
 condition_conflict = "条件冲突"
+unvaile_append_nodes = "子树不合法"
 
 class ConditionSymble:
     assignment = "="
@@ -164,11 +166,21 @@ def fix_default_value(dict_):
         for k, v in default_node_.items():
             dict_[k] = v
 
-    if dict_.get(leaf_value):
+    if dict_.get(leaf_value) != None:
         return
 
     for v in dict_.values():
         fix_default_value(v)
+
+def fill_default_value(dict_, value_):
+    if dict_.get(leaf_value):
+        return
+
+    for v in dict_.values():
+        fill_default_value(v, value_)
+
+    if not dict_.get(default_node):
+        dict_[default_node] = {leaf_value: value_}
 
 if __name__ == '__main__':
     cond = "a!=1&&c!=1||b!=1&&d!=1||m!=1&&n!=1"
