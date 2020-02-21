@@ -5,11 +5,11 @@ import copy
 
 import common
 
-def gen_mid_json(json_value):
+def gen_mid_json(json_value, condition_list):
     def make_tree(conf_dict, children, traces):
         if conf_dict.get(common.leaf_value):
-            common.sort_condition(children)
-            children.append("value=" + conf_dict[common.leaf_value])
+            common.sort_condition(children, condition_list)
+            children.append(conf_dict[common.leaf_value])
             traces.append(children)
             return
 
@@ -23,26 +23,21 @@ def gen_mid_json(json_value):
     return traces
 
 def mid_to_json(tree_nodes):
-    def safe_get_dict_value(dict_, key_, default_):
-        v_ = dict_.get(key_, default_)
-        dict_[key_] = v_
-        return dict_[key_]
-
     json_value = {} 
     for trace in tree_nodes:
         sub_dict_ = json_value
         for node in trace[:-1]:
-            sub_dict_ = safe_get_dict_value(sub_dict_, node, {})
-        sub_dict_[common.leaf_value] = trace[-1] 
-    print json.dumps(tree_nodes)
-    print json.dumps(json_value)
-    pass
+            sub_dict_ = common.safe_get_dict_value(sub_dict_, node, {})
+        sub_dict_[common.default_node] = {common.leaf_value: trace[-1]} 
+    common.fix_default_value(json_value)
+    return json_value
 
 if __name__ == '__main__':
     key = "demo"
-    json_value = json.loads(file(common.key_conf_path + key + ".json").read())
-    traces = gen_mid_json(json_value)
-    mid_file = common.key_conf_path + "." + key + ".mid.json"
-    file(mid_file, "w").write(json.dumps(traces))
-    json_value = json.loads(file(mid_file).read())
-    mid_to_json(json_value)
+    file_path = common.key_conf_path + key + ".json"
+    json_value = json.loads(file(file_path).read())
+    condition_list = ["b", "m", "a"]
+    traces = gen_mid_json(json_value, condition_list)
+    json_value = mid_to_json(traces)
+    import show_json
+    show_json.write_show_conf("demo", show_json.gen_show_json(json_value, condition_list))

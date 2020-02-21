@@ -74,6 +74,13 @@ function init(data) {
             }
         ]
     });
+    myChart.on('contextmenu', params => {
+        if (params.dataType === 'main') {
+            if (params.data.id != "__value") {
+                console.info(params.data.id)
+            }
+        }
+    });
 };
 ;
 if (option && typeof option === "object") {
