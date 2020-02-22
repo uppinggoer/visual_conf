@@ -32,11 +32,19 @@ def gen_show_json(json_value, condition_list=[]):
             })
             return
         
-        for key in common.sort_condition(conf_dict.keys(), condition_list):
+        sort_condition = common.sort_condition(conf_dict.keys(), condition_list)
+        for idx, key in enumerate(sort_condition):
             condition_label_ = copy.deepcopy(condition_label)
             condition_label_.append(key)
+
+            joined_condition = common.join_condition(sort_condition[:idx]).replace(common.ConditionSymble.assignment, common.ConditionSymble.negate)
+            if not joined_condition:
+               joined_condition = key
+            elif key != common.default_node:
+                joined_condition = joined_condition + "&&" + key
+
             traces = {
-                "name":key, 
+                "name": joined_condition, 
                 "id": common.join_condition(condition_label_),
                 "children":[],
                 "symbolSize":10, 
