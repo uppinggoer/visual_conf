@@ -111,10 +111,20 @@ def make_append_node(old_value, conditions, new_value):
     return json_value
 
 def make_append_tree(node_id, condition_string, old_value, new_value):
+    def fill_default_value(dict_, value_):
+        if dict_.get(common.leaf_value):
+            return
+
+        for v in dict_.values():
+            fill_default_value(v, value_)
+
+        if not dict_.get(common.default_node):
+            dict_[common.default_node] = {common.leaf_value: value_}
+
     # 详细 case 见 test/conf_util/test_condition.py
     conditions = _make_conditions(node_id, condition_string)
     nodes = make_append_node(old_value, conditions, new_value)
-    common.fill_default_value(nodes, old_value)
+    fill_default_value(nodes, old_value)
     common.fix_default_value(nodes)
     return nodes
 

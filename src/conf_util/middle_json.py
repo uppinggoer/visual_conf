@@ -19,6 +19,7 @@ def gen_mid_json(json_value, condition_list):
             make_tree(v_, children_, traces)
 
     traces = []
+    common.fix_default_value(json_value)
     make_tree(copy.deepcopy(json_value), [], traces)
     return traces
 
@@ -54,15 +55,14 @@ def insert_node(origin_tree, append_tree, old_value):
     common.fix_default_value(origin_tree)
     return origin_tree
 
-
 if __name__ == '__main__':
     key = "demo"
     file_path = common.key_conf_path + key + ".json"
     json_value = json.loads(file(file_path).read())
-    print json.dumps(json_value)
-    # condition_list = ["b", "m", "a"]
-    # traces = gen_mid_json(json_value, condition_list)
-    # json_value = mid_to_json(traces)
-    # import show_json
-    # show_json.write_show_conf("demo", show_json.gen_show_json(json_value, condition_list))
-    insert_node({}, {}, 0)
+    # print json.dumps(json_value)
+    condition_list = ["b", "m", "a"]
+    traces = gen_mid_json(json_value, condition_list)
+    json_value = mid_to_json(traces)
+    import show_json
+    show_json.write_show_conf("demo", show_json.gen_show_json(json_value, condition_list))
+    # insert_node({}, {}, 0)

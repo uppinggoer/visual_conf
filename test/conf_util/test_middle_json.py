@@ -101,3 +101,5 @@ class Test(unittest.TestCase):
         middle_json._merge_node(self.blank_tree, append_tree)
         self.assertEqual(self.blank_tree, expect_res)
         
+    def funcname(self):
+        pass

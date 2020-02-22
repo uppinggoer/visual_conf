@@ -3,6 +3,7 @@ import os
 import json
 import copy
 import common
+import middle_json
 
 def read_conf(key):
     json_value = json.loads(file(common.key_conf_path + key + ".json").read())
@@ -53,10 +54,15 @@ def gen_show_json(json_value, condition_list=[]):
             make_tree(conf_dict[key], condition_label_, traces["children"])
             children.append(traces)
 
+    json_value = copy.deepcopy(json_value)
+    json_value = middle_json.gen_mid_json(json_value, condition_list)
+    json_value = middle_json.mid_to_json(json_value)
+    json_value = common.fill_default_value(json_value)
+    json_value = common.cut_by_default_value(json_value)
     traces = {"name":"", "children":[]}
-    make_tree(copy.deepcopy(json_value), [], traces["children"])
+    make_tree(json_value, [], traces["children"])
     return traces
 
 if __name__ == '__main__':
     key = "demo"
-    write_show_conf(key, gen_show_json(read_conf(key)))
+    write_show_conf(key, gen_show_json(read_conf(key), ["b", "a", "m"]))

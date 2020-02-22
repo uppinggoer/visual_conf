@@ -136,7 +136,8 @@ def sort_condition(node_info, condition_list):
     # ["a=1", "b=1", "default"]
     if len(node_info) <= 0:
         return
-
+ 
+ 
     node_info_ = sorted([node for node in node_info if node != default_node], cmp=make_cmp_fun(condition_list))
     if len(node_info) > len(node_info_):
         node_info_.append(default_node)
@@ -159,28 +160,51 @@ def safe_get_dict_value(dict_, key_, default_):
     dict_[key_] = v_
     return dict_[key_]
 
-def fix_default_value(dict_):
-    while dict_.keys() == [default_node]:
-        default_node_ = dict_[default_node]
-        del dict_[default_node]
-        for k, v in default_node_.items():
-            dict_[k] = v
+def cut_by_default_value(json_value):
+    def do_cut_default_value(dict_):
+        if dict_.get(leaf_value):
+            return
 
-    if dict_.get(leaf_value) != None:
-        return
+        default_value = dict_[default_node]
+        for k_, v_ in dict_.items():
+            if k_ != default_node and v_ == default_value:
+                del dict_[k_]
+                continue
+            do_cut_default_value(v_)
 
-    for v in dict_.values():
-        fix_default_value(v)
+    do_cut_default_value(json_value)
+    return json_value
 
-def fill_default_value(dict_, value_):
-    if dict_.get(leaf_value):
-        return
+def fix_default_value(json_value):
+    def do_fix_default_value(dict_):
+        while dict_.keys() == [default_node]:
+            default_node_ = dict_[default_node]
+            del dict_[default_node]
+            for k, v in default_node_.items():
+                dict_[k] = v
 
-    for v in dict_.values():
-        fill_default_value(v, value_)
+        if dict_.get(leaf_value) != None:
+            return
 
-    if not dict_.get(default_node):
-        dict_[default_node] = {leaf_value: value_}
+        for v in dict_.values():
+            do_fix_default_value(v)
+
+    do_fix_default_value(json_value)
+    return json_value
+
+def fill_default_value(json_value):
+    def do_fill_default_value(dict_, value_):
+        if dict_.get(leaf_value):
+            return
+
+        if not dict_.get(default_node):
+            dict_[default_node] = {leaf_value: value_}
+
+        for v in dict_.values():
+            do_fill_default_value(v, dict_[default_node])
+
+    do_fill_default_value(json_value, json_value[default_node])
+    return json_value
 
 if __name__ == '__main__':
     cond = "a!=1&&c!=1||b!=1&&d!=1||m!=1&&n!=1"
